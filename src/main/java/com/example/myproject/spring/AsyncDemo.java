@@ -49,7 +49,8 @@ public class AsyncDemo {
         CompletableFuture<Void> f3 = e3.thenAcceptAsync((a)-> System.out.println("f1"),(r)-> r.run());
 
         // thenRun 方法与thenAccept 方法不一样的是，不关心任务的处理结果。只要上面的任务执行完成，就开始执行 thenAccept 。
-        CompletableFuture<Void> g1 = e3.thenRun(()-> System.out.println("f1"));
+        CompletableFuture<Void> g1 = e3.thenRun(()-> System.out.println("g1"));
+        // 等等22222执行完后执行222---
         CompletableFuture<Void> f22 = CompletableFuture.runAsync(()->{
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -61,6 +62,8 @@ public class AsyncDemo {
             System.out.println(a.TYPE);
             System.out.println("222---");
         });
+        f22.get(); // get是个阻塞方法  等待线程执行完
+        System.out.println(111);
         CompletableFuture<String> f33 = CompletableFuture.supplyAsync(()->{
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -85,8 +88,7 @@ public class AsyncDemo {
             System.out.println("f4 fail");
             return false;
         });
-        f3.get();
-        String dd = f33.getNow("dd");
-        System.out.println(dd);
+        System.out.println(f33.getNow("dd")); // getNow 不等待f33执行完毕 如果未结束直接返回dd
+        f4.get(); // 等待f3 f4 全部执行完毕
     }
 }
